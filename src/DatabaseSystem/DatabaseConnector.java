@@ -17,7 +17,7 @@ public class DatabaseConnector {
         try {
             Class.forName("org.postgresql.Driver");
             Connection connection = null;
-           
+
             connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
