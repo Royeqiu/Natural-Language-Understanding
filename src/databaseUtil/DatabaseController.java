@@ -17,6 +17,7 @@ public class DatabaseController {
     private String userName;
     private String password;
     private Connection connection;
+    private String dbJdbcType;
     private Statement statement;
     private PreparedStatement preparedStatement;
 
@@ -29,9 +30,9 @@ public class DatabaseController {
     {
         try {
             connection = DriverManager.getConnection(dbHost+dbName+"?useUnicode=true&characterEncoding=utf8",userName,password);
-            System.out.println(dbHost+dbName+"?useUnicode=true&characterEncoding=utf8"+userName+password);
-            //statement=connection.createStatement();
-        } catch (SQLException e) {
+
+
+            } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -45,19 +46,28 @@ public class DatabaseController {
             dbName=properties.getProperty("dbName");
             userName=properties.getProperty("userName");
             password=properties.getProperty("password");
+            dbJdbcType =properties.getProperty("dbJdbcType");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(dbJdbcType);
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    public void execSql(String sql)
+    {
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.execute();
+        } catch (SQLException e) {
 
+        }
+    }
     public void execInsert(String tableName, SqlObject obj)
     {
         String sql=" insert into "+tableName+" ("+obj.getColumnNameString()+")"
@@ -70,6 +80,7 @@ public class DatabaseController {
         }
 
     }
+
     public void execUpdate(String tableName, SqlObject obj,String condition)
     {
         String sql="update "+tableName+" set "+obj.getColumnNameValuePairString()+" "+condition+";";

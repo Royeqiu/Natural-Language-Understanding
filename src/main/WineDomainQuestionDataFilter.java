@@ -1,6 +1,6 @@
 package main;
 
-import util.IOManager;
+import utils.IOManager;
 
 import java.io.File;
 
